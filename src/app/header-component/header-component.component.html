@@ -1,0 +1,27 @@
+<mat-toolbar class="header-toolbar">
+    <a routerLink="/">
+        <img class="logo-img" src="../../assets/logo.png">
+    </a>
+    <div
+        class="custom-button"
+        [class.active-link]="router.url === '/accounts'"
+        routerLink="/accounts">
+        <mat-icon class="header-icon">list</mat-icon> <span class="icon-label">Accounts</span>
+    </div>
+    <span class="spacer"> </span>
+    <div
+        *ngIf="!authService.isUserLoggedIn"
+        class="custom-button"
+        (click)="openDialog()"
+    >
+        <mat-icon class="header-icon">vpn_key</mat-icon> <span class="icon-label">Sign-In</span>
+    </div>
+    <span class="greetings" *ngIf="authService.isUserLoggedIn">Henlo, <strong>{{ username }}</strong>  </span>
+    <div
+        *ngIf="authService.isUserLoggedIn"
+        class="custom-button"
+        (click)="authService.logout()"
+    >
+        <mat-icon class="header-icon">exit_to_app</mat-icon> <span class="icon-label">Log Out</span>
+    </div>
+</mat-toolbar>

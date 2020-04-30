@@ -1,0 +1,30 @@
+<h1 mat-dialog-title>Add Account</h1>
+<div mat-dialog-content>
+    <form class="example-form" [formGroup]="formGroupObject">
+        <mat-form-field class="full-width">
+            <mat-label>Federation</mat-label>
+            <input type="input" matInput placeholder="your_federation" [formControl]="federationControl">
+            <span matSuffix>*stellar.igne08.pp.ua</span>
+        </mat-form-field>
+        <mat-form-field class="full-width">
+            <mat-label>Stellar Address</mat-label>
+            <input type="input" matInput placeholder="GA2W7Z7ZY4Z3BR7KDX7WQ6ECFPKXYQXPTESLCS6BJRQWBAWODV64HZWO" [formControl]="addressControl">
+        </mat-form-field>
+        <mat-form-field class="full-width">
+            <mat-label>Memo type</mat-label>
+            <mat-select [formControl]="memoTypeControl" (selectionChange)="onMemoTypeChange($event)">
+                <mat-option *ngFor="let type of memoTypes" [value]="type.value">
+                    {{type.viewValue}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="full-width">
+            <mat-label>Memo</mat-label>
+            <input type="input" matInput placeholder="My super memo!" [formControl]="memoControl">
+        </mat-form-field>
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button color="accent" (click)="onCancelClick()">Cancel</button>
+    <button mat-raised-button color="primary" [disabled]="formGroupObject.invalid || disabledButton" (click)="onAddClick()" cdkFocusInitial>Add</button>
+</div>

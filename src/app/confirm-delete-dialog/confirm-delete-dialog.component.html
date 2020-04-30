@@ -1,0 +1,6 @@
+<h1 mat-dialog-title>Are you sure?</h1>
+<div class="dial-content" mat-dialog-content>Account for deletion: {{data.federation + '*stellar.igne08.pp.ua'}}</div>
+<div mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="onNoClick()" cdkFocusInitial>No</button>
+    <button mat-raised-button color="accent" (click)="onYesClick()">Yes, Delete!</button>
+</div>

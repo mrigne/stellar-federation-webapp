@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>Henlo, unknown birb! Who are you?</h1>
+<div mat-dialog-content>
+    <form class="example-form" [formGroup]="formGroupObject">
+        <mat-form-field class="full-width">
+            <mat-label>Username</mat-label>
+            <input type="input" matInput [formControl]="usernameControl">
+        </mat-form-field>
+        <mat-form-field class="full-width">
+            <mat-label>Password</mat-label>
+            <input type="password" matInput [formControl]="passwordControl">
+        </mat-form-field>
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="submit()">Sign In</button>
+</div>
