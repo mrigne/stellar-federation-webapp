@@ -64,11 +64,16 @@ export class AddAccountDialogComponent implements OnInit, OnDestroy {
                 update: true
             });
         } catch (e) {
-            console.error(e.message);
-            this.snackHelper.showSnack(e.message);
-            this.dialogRef.close({
-                update: false
-            });
+            if (e.error.error.type === 'WrongAddressError') {
+                this.snackHelper.showSnack(`Field '${e.error.error.params.field}' is incorrect`, true, 10);
+            } else {
+                this.snackHelper.showSnack(e.message, true, 10);
+                this.dialogRef.close({
+                    update: false
+                });
+            }
+        } finally {
+            this.disabledButton = false;
         }
     }
 
