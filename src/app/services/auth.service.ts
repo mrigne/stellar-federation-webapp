@@ -25,7 +25,9 @@ export class AuthService {
                 password
             };
             const response = await this.requestsService.runNotAuthorizedRequest(this.urls.signin, HttpMethod.POST, signInData);
-            this.cookieService.set(AuthService.AUTH_COOKIE_NAME, response.auth);
+            const expireDate = new Date();
+            expireDate.setTime(expireDate.getTime() + (24 * 60 * 60 * 1000)); // Expires in 24hrs
+            this.cookieService.set(AuthService.AUTH_COOKIE_NAME, response.auth, expireDate);
     }
 
     public get isUserLoggedIn(): boolean {
