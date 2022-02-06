@@ -1,6 +1,6 @@
 export interface IAccount {
     federation: string;
     address: string;
-    memo_type: string;
+    memoType: string;
     memo?: string | number;
 }

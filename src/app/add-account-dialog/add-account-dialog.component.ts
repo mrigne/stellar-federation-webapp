@@ -5,6 +5,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { AccountsService } from '../services/accounts.service';
 import { SnackBarService } from '../services/snack-bar.service';
 import { MatSelectChange } from '@angular/material/select';
+import { MemoType } from '../../enums/memo-type.enum';
 
 @Component({
     selector: 'app-add-account-dialog',
@@ -12,20 +13,7 @@ import { MatSelectChange } from '@angular/material/select';
     styleUrls: ['./add-account-dialog.component.styl']
 })
 export class AddAccountDialogComponent implements OnInit, OnDestroy {
-    public memoTypes = [
-        {
-            value: 'none',
-            viewValue: 'None'
-        },
-        {
-            value: 'text',
-            viewValue: 'Text'
-        },
-        {
-            value: 'id',
-            viewValue: 'ID'
-        }
-    ];
+    public memoTypes = Object.values(MemoType);
     public formGroupObject: FormGroup;
     public federationControl = new FormControl(null, Validators.required);
     public addressControl = new FormControl(null, Validators.required);
@@ -52,7 +40,7 @@ export class AddAccountDialogComponent implements OnInit, OnDestroy {
         const accountObject: IAccount = {
             federation: formValue.federation,
             address: formValue.address,
-            memo_type: formValue.memo_type
+            memoType: formValue.memoType
         };
 
         if (formValue.memo) {
@@ -78,7 +66,7 @@ export class AddAccountDialogComponent implements OnInit, OnDestroy {
     }
 
     public onMemoTypeChange(change: MatSelectChange): void {
-        if (change.value === 'none') {
+        if (change.value === MemoType.None) {
             this.memoControl.setValue(null);
             this.memoControl.clearValidators();
             this.memoControl.disable();
@@ -92,10 +80,10 @@ export class AddAccountDialogComponent implements OnInit, OnDestroy {
         this.formGroupObject = this.fb.group({
             federation: this.federationControl,
             address: this.addressControl,
-            memo_type: this.memoTypeControl,
+            memoType: this.memoTypeControl,
             memo: this.memoControl
         });
-        this.memoTypeControl.setValue('none');
+        this.memoTypeControl.setValue(MemoType.None);
         this.memoControl.disable();
     }
 

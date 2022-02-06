@@ -5,31 +5,26 @@ import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class AccountsService {
-    private urls = {
-        getAccounts: 'https://stellar.igne08.pp.ua:4443/accounts/list',
-        addAccount: 'https://stellar.igne08.pp.ua:4443/accounts/create',
-        deleteAccount: 'https://stellar.igne08.pp.ua:4443/accounts/delete'
-    };
+    private accountsUrl = 'https://stellar.igne08.pp.ua:5001/accounts';
 
     constructor(private requestsService: RequestsService,
                 private authService: AuthService) {}
 
     public async getAccounts(): Promise<IAccount[]> {
-        const accounts: IAccount[] = await this.requestsService.runNotAuthorizedRequest(this.urls.getAccounts);
+        const accounts: IAccount[] = await this.requestsService.runNotAuthorizedRequest(this.accountsUrl);
         accounts.forEach(account => account.federation += '*stellar.igne08.pp.ua');
         return accounts;
     }
 
     public async addAccount(account: IAccount): Promise<any> {
-        return this.requestsService.runAuthorizedRequest(this.urls.addAccount, this.authService.authToken, HttpMethod.PUT, account);
+        return this.requestsService.runAuthorizedRequest(this.accountsUrl, this.authService.authToken, HttpMethod.POST, account);
     }
 
     public async deleteAccount(federation: string): Promise<any> {
         return this.requestsService.runAuthorizedRequest(
-            this.urls.deleteAccount,
+            `${this.accountsUrl}/${federation}`,
             this.authService.authToken,
-            HttpMethod.POST,
-            { federation }
+            HttpMethod.DELETE
         );
     }
 }

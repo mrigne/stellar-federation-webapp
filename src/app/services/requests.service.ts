@@ -23,7 +23,7 @@ export class RequestsService {
     public async runAuthorizedRequest(url: string, token: string, method = HttpMethod.GET, body?): Promise<any> {
         const options = {
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `${token}`
             }
         };
         switch (method) {

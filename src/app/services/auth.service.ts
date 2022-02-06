@@ -8,8 +8,8 @@ import { HttpMethod, RequestsService } from './requests.service';
 export class AuthService {
     public static readonly AUTH_COOKIE_NAME = 'stellar-federation-auth';
     public urls = {
-        signin: 'https://stellar.igne08.pp.ua:4443/signin',
-        whoami: 'https://stellar.igne08.pp.ua:4443/whoami'
+        signin: 'https://stellar.igne08.pp.ua:5001/signin',
+        whoami: 'https://stellar.igne08.pp.ua:5001/whoami'
     };
 
     constructor(private cookieService: CookieService,
@@ -19,15 +19,15 @@ export class AuthService {
         return this.cookieService.get(cookieName);
     }
 
-    public async signIn(username: string, password: string): Promise<void> {
+    public async signIn(login: string, password: string): Promise<void> {
             const signInData = {
-                username,
+                login,
                 password
             };
             const response = await this.requestsService.runNotAuthorizedRequest(this.urls.signin, HttpMethod.POST, signInData);
             const expireDate = new Date();
-            expireDate.setTime(expireDate.getTime() + (24 * 60 * 60 * 1000)); // Expires in 24hrs
-            this.cookieService.set(AuthService.AUTH_COOKIE_NAME, response.auth, expireDate);
+            expireDate.setTime(expireDate.getTime() + (60 * 60 * 1000)); // Expires in 1hr
+            this.cookieService.set(AuthService.AUTH_COOKIE_NAME, `${response.tokenType} ${response.token}`, expireDate);
     }
 
     public get isUserLoggedIn(): boolean {

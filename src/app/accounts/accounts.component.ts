@@ -60,7 +60,7 @@ export class AccountsComponent implements OnInit {
     }
 
     public get displayedColumns(): string[] {
-        const columns = ['federation', 'address', 'memo', 'memo_type'];
+        const columns = ['federation', 'address', 'memo', 'memoType'];
         if (this.authService.isUserLoggedIn) {
             columns.push('action');
         }
