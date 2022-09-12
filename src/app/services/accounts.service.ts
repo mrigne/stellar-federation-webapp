@@ -5,6 +5,7 @@ import { HttpMethod, RequestsService } from './requests.service';
 
 @Injectable({ providedIn: 'root' })
 export class AccountsService {
+    private accountsListUrl = '/accounts/list';
     private accountsUrl = '/accounts';
 
     constructor(private requestsService: RequestsService,
@@ -13,7 +14,7 @@ export class AccountsService {
     public async getAccounts(): Promise<IAccount[]> {
         const config = await this.configService.getConfig();
         const accounts: IAccount[] = await this.requestsService.runNotAuthorizedRequest(
-            `${config.apiHostWithPort}${this.accountsUrl}`
+            `${config.apiHostWithPort}${this.accountsListUrl}`
         );
         accounts.forEach(account => account.federation += `*${config.stellarFederationDomain}`);
         return accounts;
