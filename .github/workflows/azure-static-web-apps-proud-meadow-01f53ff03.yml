@@ -24,7 +24,7 @@ jobs:
         uses: devops-actions/json-to-file@v1.0.0
         with:
           json: '{"apiHostWithPort": "${{ secrets.STELLAR_FEDERATION_API_URL }}", "stellarFederationDomain": "${{ secrets.STELLAR_FEDERATION_ADDRESS_HOST }}"}'
-          filename: 'dist/assets/config.json'
+          filename: 'dist/stellar-webapp/assets/config.json'
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
