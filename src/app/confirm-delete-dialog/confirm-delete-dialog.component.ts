@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AccountsService } from '../services/accounts.service';
+import { ConfigService } from '../services/config.service';
 import { SnackBarService } from '../services/snack-bar.service';
 
 @Component({
@@ -9,11 +10,13 @@ import { SnackBarService } from '../services/snack-bar.service';
   styleUrls: ['./confirm-delete-dialog.component.styl']
 })
 export class ConfirmDeleteDialogComponent implements OnInit {
+  public stellarSuffix = this.configService.getConfig().then(config => `*${config.stellarFederationDomain}`);
 
   constructor(public dialogRef: MatDialogRef<ConfirmDeleteDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               public accountsHelper: AccountsService,
-              public snackBarHelper: SnackBarService) { }
+              public snackBarHelper: SnackBarService,
+              private configService: ConfigService) { }
 
   public ngOnInit(): void {
   }
@@ -26,7 +29,8 @@ export class ConfirmDeleteDialogComponent implements OnInit {
 
   public async onYesClick(): Promise<void> {
       try {
-          await this.accountsHelper.deleteAccount(this.data.federation.replace('*stellar.igne08.pp.ua', ''));
+          const config = await this.configService.getConfig();
+          await this.accountsHelper.deleteAccount(this.data.federation.replace(`*${config.stellarFederationDomain}`, ''));
           this.dialogRef.close({
               update: true
           });

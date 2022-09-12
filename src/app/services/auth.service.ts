@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
+import { AUTH_COOKIE_NAME } from '../constants/auth.constants';
+import { ConfigService } from './config.service';
 import { HttpMethod, RequestsService } from './requests.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    public static readonly AUTH_COOKIE_NAME = 'stellar-federation-auth';
     public urls = {
-        signin: 'https://stellar.igne08.pp.ua:5001/signin',
-        whoami: 'https://stellar.igne08.pp.ua:5001/whoami'
+        signin: '/signin',
+        whoami: '/whoami'
     };
 
-    constructor(private cookieService: CookieService,
+    constructor(private configService: ConfigService,
+                private cookieService: CookieService,
                 private requestsService: RequestsService) {}
 
     public getCookie(cookieName: string): string {
@@ -24,10 +26,14 @@ export class AuthService {
                 login,
                 password
             };
-            const response = await this.requestsService.runNotAuthorizedRequest(this.urls.signin, HttpMethod.POST, signInData);
+            const config = await this.configService.getConfig();
+            const response = await this.requestsService.runNotAuthorizedRequest(
+                `${config.apiHostWithPort}${this.urls.signin}`,
+                HttpMethod.POST,
+                signInData);
             const expireDate = new Date();
             expireDate.setTime(expireDate.getTime() + (60 * 60 * 1000)); // Expires in 1hr
-            this.cookieService.set(AuthService.AUTH_COOKIE_NAME, `${response.tokenType} ${response.token}`, expireDate);
+            this.cookieService.set(AUTH_COOKIE_NAME, `${response.tokenType} ${response.token}`, expireDate);
     }
 
     public get isUserLoggedIn(): boolean {
@@ -35,14 +41,15 @@ export class AuthService {
     }
 
     public async getCurrentUser(): Promise<any> {
-        return this.requestsService.runAuthorizedRequest(this.urls.whoami, this.authToken);
+        const config = await this.configService.getConfig();
+        return this.requestsService.runAuthorizedRequest(`${config.apiHostWithPort}${this.urls.whoami}`);
     }
 
     public logout(): void {
-        this.cookieService.delete(AuthService.AUTH_COOKIE_NAME);
+        this.cookieService.delete(AUTH_COOKIE_NAME);
     }
 
     public get authToken(): string {
-        return this.cookieService.get(AuthService.AUTH_COOKIE_NAME);
+        return this.cookieService.get(AUTH_COOKIE_NAME);
     }
 }

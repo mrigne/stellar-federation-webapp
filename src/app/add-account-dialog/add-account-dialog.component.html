@@ -4,7 +4,7 @@
         <mat-form-field class="full-width">
             <mat-label>Federation</mat-label>
             <input type="input" matInput placeholder="your_federation" [formControl]="federationControl">
-            <span matSuffix>*stellar.igne08.pp.ua</span>
+            <span matSuffix>{{ stellarSuffix | async }}</span>
         </mat-form-field>
         <mat-form-field class="full-width">
             <mat-label>Stellar Address</mat-label>

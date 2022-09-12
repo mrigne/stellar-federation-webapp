@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IAccount } from '../../interfaces/account.interface';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AccountsService } from '../services/accounts.service';
+import { ConfigService } from '../services/config.service';
 import { SnackBarService } from '../services/snack-bar.service';
 import { MatSelectChange } from '@angular/material/select';
 import { MemoType } from '../../enums/memo-type.enum';
@@ -20,12 +21,14 @@ export class AddAccountDialogComponent implements OnInit, OnDestroy {
     public memoTypeControl = new FormControl();
     public memoControl = new FormControl(null, Validators.required);
     public disabledButton = false;
+    public stellarSuffix = this.configService.getConfig().then(config => `*${config.stellarFederationDomain}`);
 
     constructor(
         public dialogRef: MatDialogRef<AddAccountDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: IAccount,
         private fb: FormBuilder,
         private accountsService: AccountsService,
+        private configService: ConfigService,
         private snackHelper: SnackBarService) {}
 
     public onCancelClick(): void {

@@ -1,40 +1,43 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
+import { AUTH_COOKIE_NAME } from '../constants/auth.constants';
 
 @Injectable({
     providedIn: 'root'
 })
 export class RequestsService {
-    constructor(private http: HttpClient) {}
+    constructor(private cookieService: CookieService,
+                private http: HttpClient) {}
 
-    public async runNotAuthorizedRequest(url: string, method = HttpMethod.GET, body?): Promise<any> {
+    public async runNotAuthorizedRequest<T = any, U = any>(url: string, method = HttpMethod.GET, body?: T): Promise<U> {
         switch (method) {
             case HttpMethod.GET:
-                return this.http.get(url).toPromise();
+                return this.http.get<U>(url).toPromise();
             case HttpMethod.POST:
-                return this.http.post(url, body).toPromise();
+                return this.http.post<U>(url, body).toPromise();
             case HttpMethod.PUT:
-                return this.http.put(url, body).toPromise();
+                return this.http.put<U>(url, body).toPromise();
             case HttpMethod.DELETE:
-                return this.http.delete(url).toPromise();
+                return this.http.delete<U>(url).toPromise();
         }
     }
 
-    public async runAuthorizedRequest(url: string, token: string, method = HttpMethod.GET, body?): Promise<any> {
+    public async runAuthorizedRequest<T = any, U = any>(url: string, method = HttpMethod.GET, body?: T): Promise<U> {
         const options = {
             headers: {
-                Authorization: `${token}`
+                Authorization: `${this.cookieService.get(AUTH_COOKIE_NAME)}`
             }
         };
         switch (method) {
             case HttpMethod.GET:
-                return this.http.get(url, options).toPromise();
+                return this.http.get<U>(url, options).toPromise();
             case HttpMethod.POST:
-                return this.http.post(url, body, options).toPromise();
+                return this.http.post<U>(url, body, options).toPromise();
             case HttpMethod.PUT:
-                return this.http.put(url, body, options).toPromise();
+                return this.http.put<U>(url, body, options).toPromise();
             case HttpMethod.DELETE:
-                return this.http.delete(url, options).toPromise();
+                return this.http.delete<U>(url, options).toPromise();
         }
     }
 }
